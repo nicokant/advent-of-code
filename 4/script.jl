@@ -7,7 +7,8 @@ using CSV, LinearAlgebra
 file = "4/input.txt"
 
 function xmas_occurrences(str::String)
-    re = r"(XMAS|SAMX)"
+    # IMPORTANT: do not consume the string, otherwise it won't find overlapping strings like XMASAMX
+    re = r"(?=(XMAS|SAMX))"
     length(collect(eachmatch(re, str)))
 end
 
@@ -15,7 +16,7 @@ f = open(file)
 rows = [split(l, "") for l in readlines(f)]
 matrix = mapreduce(permutedims, vcat, rows)
 
-reversed_matrix = reverse(matrix)
+reversed_matrix = reverse(matrix, dims=2)
 r_count, c_count= size(matrix)
 
 sum([
@@ -26,5 +27,3 @@ sum([
 ])
 
 close(f)
-
-# NOTE: this is still wrong
